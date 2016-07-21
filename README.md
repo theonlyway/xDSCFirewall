@@ -20,6 +20,46 @@ This custom resource either enables or disables the Public, Private or Domain wi
 
 **Note:** Currently only supports one zone per config block
 
+**DefaultInboundAction**
+
+- Allow - Sets the default inbound action to allowed
+- Block - Sets the default inbound action to blocked
+- NotConfigured - Sets the default inbound action to not configured
+	- This is the default value
+
+**DefaultOutboundAction**
+
+- Allow - Sets the default outbound action to allowed
+- Block - Sets the default outbound action to blocked
+- NotConfigured - Sets the default outbound action to not configured
+	- This is the default value
+
+**LogAllowed**
+
+- True - Tells the Firewall to log traffic that gets allowed
+- False - Tells the firewall not to log traffic that gets allowed
+	- This is the default value
+- NotConfigured - Sets LogAllowed to not configured state where it doesn't log traffic
+
+**LogIgnored**
+
+- True - Tells the Firewall to log traffic that gets ignored
+- False - Tells the firewall not to log traffic that gets ignored
+- NotConfigured - Sets LogAllowed to not configured state where it doesn't log traffic
+	- This is the default value
+
+**LogBlocked**
+
+- True - Tells the Firewall to log traffic that gets blocked
+- False - Tells the firewall not to log traffic that gets blocked
+	- This is the default value
+- NotConfigured - Sets LogAllowed to not configured state where it doesn't log traffic
+
+**LogMaxSizeKilobytes**
+
+- 4096 - This is the default value in Kilobytes 
+
+
 ### Example ###
 
     Service WindowsFirewall
