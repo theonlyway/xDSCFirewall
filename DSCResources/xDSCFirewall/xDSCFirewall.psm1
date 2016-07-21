@@ -132,7 +132,7 @@ function Test-TargetResource
 
   if ($Ensure -eq 'Present')
   {
-    if ($firewall.Enabled -eq $true)
+    if ($firewall.Enabled -eq $true -and $DefaultInboundAction -eq $firewall.DefaultInboundAction -and $DefaultOutboundAction -eq $firewall.DefaultOutboundAction -and $LogAllowed -eq $firewall.LogAllowed -and $LogBlocked -eq $firewall.LogBlocked -and $LogIgnored -eq $firewall.LogIgnored -and $LogMaxSizeKilobytes -eq $firewall.LogMaxSizeKilobytes)
     {
       return $true
     }
@@ -143,7 +143,7 @@ function Test-TargetResource
   }
   elseif ($Ensure -eq 'Absent')
   {
-    if ($firewall.Enabled -eq $false)
+    if ($firewall.Enabled -eq $true -and $DefaultInboundAction -eq $firewall.DefaultInboundAction -and $DefaultOutboundAction -eq $firewall.DefaultOutboundAction -and $LogAllowed -eq $firewall.LogAllowed -and $LogBlocked -eq $firewall.LogBlocked -and $LogIgnored -eq $firewall.LogIgnored -and $LogMaxSizeKilobytes -eq $firewall.LogMaxSizeKilobytes)
     {
       return $true
     }
@@ -151,56 +151,7 @@ function Test-TargetResource
     {
       return $false
     }
-  }
-      # Firewall Default Actions
-    if ($DefaultInboundAction -eq $firewall.DefaultInboundAction) {
-        Write-Verbose "No Action required! DefaultInboundAction is already set to $DefaultInboundAction"
-        $result = $true
-    } else {
-        Write-Verbose "Action required! DefaultInboundAction is not set to $DefaultInboundAction ($($firewall.DefaultInboundAction))"
-        $result = $false
-    }     
-
-    if ($DefaultOutboundAction -eq $firewall.DefaultOutboundAction) {
-        Write-Verbose "No Action required! DefaultOutboundAction is already set to $DefaultOutboundAction"
-        $result = $true
-    } else {
-        Write-Verbose "Action required! DefaultOutboundAction is not set to $DefaultOutboundAction ($($firewall.DefaultOutboundAction))"
-        $result = $false
-    }     
-
-    # Check Firewall Log Configuration
-    if ($LogAllowed -eq $firewall.LogAllowed) {
-        Write-Verbose "No Action required! LogAllowed is already set to $LogAllowed"
-        $result = $true
-    } else {
-        Write-Verbose "Action required! LogAllowed is not set to $LogAllowed ($($firewall.LogAllowed))"
-        $result = $false
-    }     
-     
-    if ($LogBlocked -eq $firewall.LogBlocked) {
-        Write-Verbose "No Action required! LogBlocked is already set to $LogBlocked"
-        $result = $true
-    } else {
-        Write-Verbose "Action required! LogBlocked is not set to $LogBlocked ($($firewall.LogBlocked))"
-        $result = $false
-    }        
-
-    if ($LogIgnored -eq $firewall.LogIgnored) {
-        Write-Verbose "No Action required! LogIgnored is already set to $LogIgnored" 
-        $result = $true
-    } else {
-        Write-Verbose "Action required! LogIgnored is not set to $LogIgnored ($($firewall.LogIgnored))"
-        $result = $false
-    }     
-
-    if ($LogMaxSizeKilobytes -eq $firewall.LogMaxSizeKilobytes) {
-        Write-Verbose "No Action required! LogMaxSizeKilobytes is already set to $LogMaxSizeKilobytes"
-        $result = $true
-    } else {
-        Write-Verbose "Action required! LogMaxSizeKilobytes is not set to $LogMaxSizeKilobytes ($($firewall.LogMaxSizeKilobytes))"
-        $result = $false
-    }     
+  }   
 }
 
 
