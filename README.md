@@ -96,7 +96,7 @@ This custom resource either enables or disables the Public, Private or Domain wi
 # Versions
 
 ## 1.3
-Merged in requested changes from heoelri adding the following parameters
+Merged in requested changes from heoelri adding the following non-mandatory parameters
 
 - LogAllowed
 - LogIgnored
