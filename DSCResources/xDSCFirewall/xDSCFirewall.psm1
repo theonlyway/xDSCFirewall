@@ -84,13 +84,13 @@ function Set-TargetResource
   {
     $EnableFW = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled True -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -ErrorAction SilentlyContinue
-    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message $Output
+    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message ($Output | Out-String)
   }
   elseif ($Ensure -eq "Absent")
   {
     $DisableFW = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled False -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -ErrorAction SilentlyContinue
-    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message $Output
+    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message ($Output | Out-String)
 
   }
   else
