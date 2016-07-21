@@ -138,7 +138,7 @@ function Test-TargetResource
     [System.String]$DefaultOutboundAction = "NotConfigured"
   )
 
-  $firewall = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled True -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
+  $firewall = Get-NetFirewallProfile $Zone | Select-Object Enabled,LogAllowed,LogBlocked,LogIgnored,LogMaxSizeKilobytes,DefaultInboundAction,DefaultOutboundAction
 
   if ($Ensure -eq 'Present')
   {
