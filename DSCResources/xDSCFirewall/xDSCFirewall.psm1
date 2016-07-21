@@ -8,15 +8,15 @@
     [System.String]
     $Zone
   )
-  $firewall = Get-NetFirewallProfile $Zone | Select-Object  Enabled, LogAllowed, LogBlocked, LogIgnored, LogMaxSizeKilobytes, DefaultInboundAction, DefaultOutboundAction
+  $firewall = Get-NetFirewallProfile $Zone | Select-Object Enabled,LogAllowed,LogBlocked,LogIgnored,LogMaxSizeKilobytes,DefaultInboundAction,DefaultOutboundAction
 
   if ($firewall.Enabled -eq $false) {
     return @{
-      Ensure              = "Absent";
-      Zone                = $Zone;
-      LogAllowed          = $firewall.LogAllowed;
-      LogBlocked          = $firewall.LogBlocked;
-      LogIgnored          = $firewall.LogIgnored;
+      Ensure = "Absent";
+      Zone = $Zone;
+      LogAllowed = $firewall.LogAllowed;
+      LogBlocked = $firewall.LogBlocked;
+      LogIgnored = $firewall.LogIgnored;
       LogMaxSizeKilobytes = $firewall.LogMaxSizeKilobytes;
       DefaultInboundAction = $firewall.DefaultInboundAction;
       DefaultOutboundAction = $firewall.DefaultOutboundAction;
@@ -25,11 +25,11 @@
   else
   {
     return @{
-      Ensure              = "Present";
-      Zone                = $Zone;
-      LogAllowed          = $firewall.LogAllowed;
-      LogBlocked          = $firewall.LogBlocked;
-      LogIgnored          = $firewall.LogIgnored;
+      Ensure = "Present";
+      Zone = $Zone;
+      LogAllowed = $firewall.LogAllowed;
+      LogBlocked = $firewall.LogBlocked;
+      LogIgnored = $firewall.LogIgnored;
       LogMaxSizeKilobytes = $firewall.LogMaxSizeKilobytes;
       DefaultInboundAction = $firewall.DefaultInboundAction;
       DefaultOutboundAction = $firewall.DefaultOutboundAction;
@@ -70,17 +70,27 @@ function Set-TargetResource
     [System.String]$DefaultOutboundAction = "NotConfigured"
   )
 
+  $Output = @(
+  "Enabled firewall zone $zone and configured the following
+   DefaultInboundAction: $DefaultInboundAction
+   DefaultOutboundAction: $DefaultOutboundAction
+   LogAllowed: $LogAllowed
+   LogBlocked: $LogBlocked
+   LogIgnored: $LogIgnored
+   LogMaxSizeKilobytes: $LogMaxSizeKilobytes
+  ")
+
   if ($Ensure -eq "Present")
   {
     $EnableFW = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled True -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -ErrorAction SilentlyContinue
-    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message "Firewall zone $zone was enabled"
+    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message $Output
   }
   elseif ($Ensure -eq "Absent")
   {
     $DisableFW = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled False -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -ErrorAction SilentlyContinue
-    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message "Firewall zone $zone was disabled"
+    Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message $Output
 
   }
   else
@@ -151,7 +161,7 @@ function Test-TargetResource
     {
       return $false
     }
-  }   
+  }
 }
 
 
