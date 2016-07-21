@@ -38,6 +38,12 @@ This custom resource either enables or disables the Public, Private or Domain wi
     {
       Ensure = "Present"
       Zone = "Domain"
+      LogAllowed = "False"
+      LogIgnored = "False"
+      LogBlocked = "False"
+      LogMaxSizeKilobytes = "4096"
+      DefaultInboundAction = "Block"
+      DefaultOutboundAction = "Allowed"
       Dependson = "[Service]WindowsFirewall"
     }
     xDSCFirewall EnabledPrivate
