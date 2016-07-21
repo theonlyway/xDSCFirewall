@@ -22,42 +22,48 @@ This custom resource either enables or disables the Public, Private or Domain wi
 
 **DefaultInboundAction**
 
-- Allow - Sets the default inbound action to allowed
-- Block - Sets the default inbound action to blocked
-- NotConfigured - Sets the default inbound action to not configured
-	- This is the default value
+- Allow - Allows all inbound network traffic, whether or not it matches an inbound rule. 
+- Block - Blocks inbound network traffic that does not match an inbound rule. 
+- NotConfigured - Valid only when configuring a Group Policy Object (GPO). This parameter removes the setting from the GPO, which results in the policy not changing the value on the computer when the policy is applied. 
+
+The default setting when managing a computer is Block. When managing a GPO, the default setting is NotConfigured.
+
 
 **DefaultOutboundAction**
 
-- Allow - Sets the default outbound action to allowed
-- Block - Sets the default outbound action to blocked
-- NotConfigured - Sets the default outbound action to not configured
-	- This is the default value
+- Allow - Allows all outbound network traffic, whether or not it matches an outbound rule. 
+- Block - Blocks outbound network traffic that does not match an outbound rule. 
+- NotConfigured - Valid only when configuring a Group Policy Object (GPO). This parameter removes the setting from the GPO, which results in the policy not changing the value on the computer when the policy is applied. 
+
+The default setting when managing a computer is Allow. When managing a GPO, the default setting is NotConfigured.
 
 **LogAllowed**
 
-- True - Tells the Firewall to log traffic that gets allowed
-- False - Tells the firewall not to log traffic that gets allowed
-	- This is the default value
-- NotConfigured - Sets LogAllowed to not configured state where it doesn't log traffic
+- True - Windows writes an entry to the log whenever an incoming or outgoing connection is prevented by the policy. 
+- False - No logging for dropped connections. This parameter removes the setting from the GPO, which results in the policy not changing the value on the computer when the policy is applied. 
+- NotConfigured - Valid only when configuring a Group Policy Object (GPO). This parameter removes the setting from the GPO, which results in the policy not changing the value on the computer when the policy is applied. 
+
+The default setting when managing a computer is False. When managing a GPO, the default setting is NotConfigured.
 
 **LogIgnored**
 
-- True - Tells the Firewall to log traffic that gets ignored
-- False - Tells the firewall not to log traffic that gets ignored
-- NotConfigured - Sets LogAllowed to not configured state where it doesn't log traffic
-	- This is the default value
+- True - Windows writes an entry to the log whenever an incoming or outgoing connection is prevented by policy. 
+- False - No logging for dropped connections. 
+- NotConfigured - Valid only when configuring a Group Policy Object (GPO). This parameter removes the setting from the GPO, which results in the policy not changing the value on the computer when the policy is applied. 
+
+The default setting when managing a computer is False. When managing a GPO, the default setting is NotConfigured.
 
 **LogBlocked**
 
-- True - Tells the Firewall to log traffic that gets blocked
-- False - Tells the firewall not to log traffic that gets blocked
-	- This is the default value
-- NotConfigured - Sets LogAllowed to not configured state where it doesn't log traffic
+- True - Windows writes an entry to the log whenever an incoming or outgoing connection is prevented by policy. 
+- False - No logging for dropped connections. 
+- NotConfigured - Valid only when configuring a Group Policy Object (GPO). This parameter removes the setting from the GPO, which results in the policy not changing the value on the computer when the policy is applied. 
+
+The default setting when managing a computer is False. When managing a GPO, the default setting is NotConfigured.
 
 **LogMaxSizeKilobytes**
 
-- 4096 - This is the default value in Kilobytes 
+- 4096 - The default setting when managing a computer is 4096. Specifies the maximum file size of the log, in kilobytes. The acceptable values for this parameter are: 1 through 32767 
 
 
 ### Example ###
