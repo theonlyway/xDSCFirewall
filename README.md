@@ -5,6 +5,8 @@ This custom resource either enables or disables the Public, Private or Domain wi
 
 ### Parameters ###
 
+**Note:** Currently only supports one zone per config block
+
 **Ensure**
 
 *Note: This is a required parameter*
@@ -17,8 +19,6 @@ This custom resource either enables or disables the Public, Private or Domain wi
 *Note: This is a required parameter*
 
 - Define the zone you want enabled or disabled. Available firewall zones are Public, Private or Domain.
-
-**Note:** Currently only supports one zone per config block
 
 **DefaultInboundAction**
 
