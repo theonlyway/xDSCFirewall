@@ -92,3 +92,18 @@ This custom resource either enables or disables the Public, Private or Domain wi
       Zone = "Private"
       Dependson = "[Service]WindowsFirewall"
     }
+
+# Versions
+
+## 1.3
+Merged in requested changes from heoelri adding the following parameters
+
+- LogAllowed
+- LogIgnored
+- LogBlocked
+- LogMaxSizeKilobytes
+- DefaultInboundAction
+- DefaultOutboundAction
+
+## 1.0
+Basic DSC module to enable Firewall profiles
