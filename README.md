@@ -101,7 +101,7 @@ The default setting when managing a computer is False. When managing a GPO, the 
 
 # Versions
 
-## 1.4
+## 1.5
 Merged in requested changes from heoelri adding the following non-mandatory parameters
 
 - LogAllowed
