@@ -1,4 +1,4 @@
-﻿Import-Module ..\DSCResources\xDSCFirewall\xDSCFirewall.psm1
+﻿Import-Module .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
 
 InModuleScope XDSCFirewall {
   $Zone = "Public"
