@@ -29,7 +29,7 @@ InModuleScope XDSCFirewall {
 
     It "Enabling firewall and configuring with values" {
       $result = Set-TargetResource -Zone $Zone -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 `
-         -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured
+         -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
   }
 
