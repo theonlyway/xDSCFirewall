@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/x6a08ruk447c807x?svg=true)](https://ci.appveyor.com/project/theonlyway/xdscfirewall)
+
 # xDSCFirewall #
 ## Overview ##
 
