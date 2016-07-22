@@ -153,7 +153,7 @@ function Test-TargetResource
   }
   elseif ($Ensure -eq 'Absent')
   {
-    if ($firewall.Enabled -eq $true -and $DefaultInboundAction -eq $firewall.DefaultInboundAction -and $DefaultOutboundAction -eq $firewall.DefaultOutboundAction -and $LogAllowed -eq $firewall.LogAllowed -and $LogBlocked -eq $firewall.LogBlocked -and $LogIgnored -eq $firewall.LogIgnored -and $LogMaxSizeKilobytes -eq $firewall.LogMaxSizeKilobytes)
+    if ($firewall.Enabled -eq $false -and $DefaultInboundAction -eq $firewall.DefaultInboundAction -and $DefaultOutboundAction -eq $firewall.DefaultOutboundAction -and $LogAllowed -eq $firewall.LogAllowed -and $LogBlocked -eq $firewall.LogBlocked -and $LogIgnored -eq $firewall.LogIgnored -and $LogMaxSizeKilobytes -eq $firewall.LogMaxSizeKilobytes)
     {
       return $true
     }
