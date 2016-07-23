@@ -25,6 +25,19 @@ InModuleScope XDSCFirewall {
     }
   }
 
+    Describe "Checking Get-TargetResource results" {
+    $Firewall.Enabled = $false
+    Mock Get-NetFirewallProfile -MockWith { $Firewall }
+    It "Firewall disabled while Test-TargetResource should return absent in hash table" {
+      (Get-TargetResource -Zone $Zone).Ensure | Should Be 'Absent'
+    }
+
+    $Firewall.Enabled = $true
+    Mock Get-NetFirewallProfile -MockWith { $Firewall }
+    It "Firewall enabled while Test-TargetResource should return present in hash table" {
+      (Get-TargetResource -Zone $Zone).Ensure | Should Be 'Present'
+    }
+  }
     Describe "Checking Set-TargetResource" {
 
     It "Disabling firewall and configuring with values" {
