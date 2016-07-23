@@ -6,7 +6,11 @@
   (
     [Parameter(Mandatory = $true)][ValidateSet("Domain","Private","Public")]
     [System.String]
-    $Zone
+    $Zone,
+
+    [Parameter(Mandatory = $true)][ValidateSet("Present","Absent")]
+    [System.String]
+    $Ensure
   )
   $firewall = Get-NetFirewallProfile $Zone | Select-Object Enabled,LogAllowed,LogBlocked,LogIgnored,LogMaxSizeKilobytes,DefaultInboundAction,DefaultOutboundAction
 
@@ -82,20 +86,20 @@ function Set-TargetResource
 
   if ($Ensure -eq "Present")
   {
-    $EnableFW = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled True -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
+    Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled True -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -ErrorAction SilentlyContinue
     Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message ($Output | Out-String)
   }
   elseif ($Ensure -eq "Absent")
   {
-    $DisableFW = Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled False -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
+    Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled False -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -ErrorAction SilentlyContinue
     Write-EventLog -LogName "Microsoft-Windows-DSC/Operational" -Source "xDSCFirewall" -EventId 3001 -EntryType Information -Message ($Output | Out-String)
 
   }
   else
   {
-    return $false
+    Write-Verbose "No match"
   }
 
   #Include this line if the resource requires a system reboot.

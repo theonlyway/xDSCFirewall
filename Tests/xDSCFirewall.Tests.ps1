@@ -17,7 +17,7 @@ InModuleScope XDSCFirewall {
   Describe "Checking if functions return correct objects" {
 
     It "Get-TargetResource return a hashtable" {
-      Get-TargetResource -Zone $Zone | Should Be 'System.Collections.Hashtable'
+      Get-TargetResource -Zone $Zone -Ensure $EnsurePresent | Should Be 'System.Collections.Hashtable'
     }
 
     It "Test-TargetResource return true or false" {
@@ -29,13 +29,13 @@ InModuleScope XDSCFirewall {
     $Firewall.Enabled = $false
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
     It "Firewall disabled while Test-TargetResource should return absent in hash table" {
-      (Get-TargetResource -Zone $Zone).Ensure | Should Be 'Absent'
+      (Get-TargetResource -Zone $Zone -Ensure $EnsurePresent).Ensure | Should Be 'Absent'
     }
 
     $Firewall.Enabled = $true
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
     It "Firewall enabled while Test-TargetResource should return present in hash table" {
-      (Get-TargetResource -Zone $Zone).Ensure | Should Be 'Present'
+      (Get-TargetResource -Zone $Zone -Ensure $EnsurePresent).Ensure | Should Be 'Present'
     }
   }
     Describe "Checking Set-TargetResource" {
