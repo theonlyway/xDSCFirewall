@@ -14,18 +14,18 @@ InModuleScope XDSCFirewall {
     DefaultOutboundAction = "NotConfigured"
   }
 
-  Describe "Checking if functions return correct objects" {
+  Describe "Testing if functions return correct objects" {
 
-    It "Get-TargetResource return a hashtable" {
+    It "Get-TargetResource returns a hashtable" {
       Get-TargetResource -Zone $Zone -Ensure $EnsurePresent | Should Be 'System.Collections.Hashtable'
     }
 
-    It "Test-TargetResource return true or false" {
+    It "Test-TargetResource returns true or false" {
       (Test-TargetResource -Zone $Zone -Ensure "Present").GetType() -as [string] | Should Be 'bool'
     }
   }
 
-    Describe "Checking Get-TargetResource results" {
+    Describe "Testing Get-TargetResource results" {
     $Firewall.Enabled = $false
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
     It "Firewall disabled while Test-TargetResource should return absent in hash table" {
@@ -38,7 +38,7 @@ InModuleScope XDSCFirewall {
       (Get-TargetResource -Zone $Zone -Ensure $EnsurePresent).Ensure | Should Be 'Present'
     }
   }
-    Describe "Checking Set-TargetResource" {
+    Describe "Testing Set-TargetResource" {
 
     It "Disabling firewall and configuring with values" {
       $result = Set-TargetResource -Zone $Zone -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 `
@@ -46,7 +46,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall disabled checking ensure present logic for Test-TargetResource" {
+  Describe "Firewall disabled Testing ensure present logic for Test-TargetResource" {
     $Firewall.Enabled = $false
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
@@ -55,7 +55,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall disabled checking ensure absent logic for Test-TargetResource" {
+  Describe "Firewall disabled Testing ensure absent logic for Test-TargetResource" {
     $Firewall.Enabled = $false
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
@@ -64,7 +64,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Checking Set-TargetResource" {
+  Describe "Testing Set-TargetResource" {
 
     It "Enabling firewall and configuring with values" {
       $result = Set-TargetResource -Zone $Zone -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 `
@@ -72,7 +72,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall enabled checking ensure present logic for Test-TargetResource" {
+  Describe "Firewall enabled Testing ensure present logic for Test-TargetResource" {
     $Firewall.Enabled = $true
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
@@ -81,7 +81,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall enabled checking ensure absent logic for Test-TargetResource" {
+  Describe "Firewall enabled Testing ensure absent logic for Test-TargetResource" {
     $Firewall.Enabled = $true
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
