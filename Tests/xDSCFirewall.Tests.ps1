@@ -46,7 +46,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall disabled Testing ensure present logic for Test-TargetResource" {
+  Describe "Firewall disabled testing ensure present logic for Test-TargetResource" {
     $Firewall.Enabled = $false
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
@@ -55,7 +55,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall disabled Testing ensure absent logic for Test-TargetResource" {
+  Describe "Firewall disabled testing ensure absent logic for Test-TargetResource" {
     $Firewall.Enabled = $false
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
@@ -72,7 +72,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall enabled Testing ensure present logic for Test-TargetResource" {
+  Describe "Firewall enabled testing ensure present logic for Test-TargetResource" {
     $Firewall.Enabled = $true
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
@@ -81,7 +81,7 @@ InModuleScope XDSCFirewall {
     }
   }
 
-  Describe "Firewall enabled Testing ensure absent logic for Test-TargetResource" {
+  Describe "Firewall enabled testing ensure absent logic for Test-TargetResource" {
     $Firewall.Enabled = $true
     Mock Get-NetFirewallProfile -MockWith { $Firewall }
 
