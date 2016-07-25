@@ -1,5 +1,4 @@
-﻿#requires -Version 2 -Modules Pester, xDSCFirewall
-Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
+﻿Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
 
 InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
   $Firewall = New-Object -TypeName PSObject -Property @{
