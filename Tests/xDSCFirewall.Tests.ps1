@@ -40,7 +40,7 @@ InModuleScope XDSCFirewall {
     It "Disabling firewall and configuring with values" {
       Set-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
-    Context "Testing ensure logic for Test-TargetResource" {
+    Context "Testing ensure/absent logic for Test-TargetResource on a disabled firewall zone" {
       $Firewall.Enabled = $false
       Mock Get-NetFirewallProfile -MockWith { $Firewall }
       It "Testing Test-TargetResource present logic should return false" {
@@ -78,7 +78,7 @@ InModuleScope XDSCFirewall {
     It "Enabling firewall and configuring with values" {
       Set-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
-    Context "Testing ensure logic for Test-TargetResource" {
+    Context "Testing ensure/absent logic for Test-TargetResource on a enabled firewall zone" {
       $Firewall.Enabled = $true
       Mock Get-NetFirewallProfile -MockWith { $Firewall }
       It "Testing Test-TargetResource present logic should return true" {
@@ -88,7 +88,7 @@ InModuleScope XDSCFirewall {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'false'
       }
     }
-    Context "Testing ensure logic" {
+    Context "Testing Test-TargetResource operater logic for present" {
       $Firewall.Enabled = $true
       Mock Get-NetFirewallProfile -MockWith { $Firewall }
       It "LogBlocked shouldn't match so should return false" {
