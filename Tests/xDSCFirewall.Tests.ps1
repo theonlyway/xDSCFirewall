@@ -104,4 +104,37 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
       }
     }
   }
+  Describe -Name 'Setting firewall back to defaults with Set-TargetResource' -Fixture {
+    It -name 'Enabling firewall with default values' -test {
+      Set-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured
+    }
+    Context -Name 'Testing ensure/absent logic for Test-TargetResource on a enabled firewall zone' -Fixture {
+      It -name 'Testing Test-TargetResource present logic should return true' -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured | Should Be 'true'
+      }
+      It -name 'Testing Test-TargetResource absent logic should return false' -test {
+        Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured | Should Be 'false'
+      }
+    }
+    Context -Name 'Testing Test-TargetResource operater logic for present' -Fixture {
+      It -name "LogBlocked shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "LogAllowed shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogBlocked True -LogAllowed True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "LogIgnored shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored False -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "LogMaxSizeKilobytes shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 1024 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Allow -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Block | Should Be 'False'
+      }
+    }
+  }
 }
