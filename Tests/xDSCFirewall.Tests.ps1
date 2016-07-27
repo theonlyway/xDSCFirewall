@@ -1,112 +1,138 @@
-﻿Import-Module .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
+﻿Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
 
-InModuleScope XDSCFirewall {
-  $Firewall = New-Object PSObject -Property @{
-    Enabled = $true
-    LogAllowed = $false
-    LogBlocked = $true
-    LogIgnored = "NotConfigured"
-    LogMaxSizeKilobytes = "4096"
-    DefaultInboundAction = "Block"
-    DefaultOutboundAction = "Allow"
+InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
+  $Firewall = New-Object -TypeName PSObject -Property @{
+    Enabled               = $true
+    LogAllowed            = $false
+    LogBlocked            = $true
+    LogIgnored            = 'NotConfigured'
+    LogMaxSizeKilobytes   = '4096'
+    DefaultInboundAction  = 'Block'
+    DefaultOutboundAction = 'Allow'
   }
 
-  Describe "Testing if functions return correct objects" {
-
-    It "Get-TargetResource returns a hashtable" {
+  Describe -Name 'Testing if functions return correct objects' -Fixture {
+    It -name 'Get-TargetResource returns a hashtable' -test {
       Get-TargetResource -Zone Public -Ensure Present | Should Be 'System.Collections.Hashtable'
     }
 
-    It "Test-TargetResource returns true or false" {
-      (Test-TargetResource -Zone Public -Ensure "Present").GetType() -as [string] | Should Be 'bool'
+    It -name 'Test-TargetResource returns true or false' -test {
+      (Test-TargetResource -Zone Public -Ensure 'Present').GetType() -as [string] | Should Be 'bool'
     }
   }
 
-  Describe "Testing Get-TargetResource results" {
+  Describe -Name 'Testing Get-TargetResource results' -Fixture {
     $Firewall.Enabled = $false
-    Mock Get-NetFirewallProfile -MockWith { $Firewall }
-    It "Firewall disabled while Test-TargetResource should return absent in hash table" {
+    Mock -CommandName Get-NetFirewallProfile -MockWith {
+      $Firewall
+    }
+    It -name 'Firewall disabled while Test-TargetResource should return absent in hash table' -test {
       (Get-TargetResource -Zone Public -Ensure Present).Ensure | Should Be 'Absent'
     }
 
     $Firewall.Enabled = $true
-    Mock Get-NetFirewallProfile -MockWith { $Firewall }
-    It "Firewall enabled while Test-TargetResource should return present in hash table" {
+    Mock -CommandName Get-NetFirewallProfile -MockWith {
+      $Firewall
+    }
+    It -name 'Firewall enabled while Test-TargetResource should return present in hash table' -test {
       (Get-TargetResource -Zone Public -Ensure Present).Ensure | Should Be 'Present'
     }
   }
-  Describe "Disabling Firewall with Set-TargetResource" {
-
-    It "Disabling firewall and configuring with values" {
+  Describe -Name 'Disabling Firewall with Set-TargetResource' -Fixture {
+    It -name 'Disabling firewall and configuring with values' -test {
       Set-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
-    Context "Testing ensure/absent logic for Test-TargetResource on a disabled firewall zone" {
-      $Firewall.Enabled = $false
-      Mock Get-NetFirewallProfile -MockWith { $Firewall }
-      It "Testing Test-TargetResource present logic should return false" {
+    Context -Name 'Testing ensure/absent logic for Test-TargetResource on a disabled firewall zone' -Fixture {
+      It -name 'Testing Test-TargetResource present logic should return false' -test {
         Test-TargetResource -Zone Public -Ensure Present -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "Testing Test-TargetResource absent logic should return true" {
+      It -name 'Testing Test-TargetResource absent logic should return true' -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'True'
       }
     }
-    Context "Testing Test-TargetResource operater logic for absent" {
-      $Firewall.Enabled = $false
-      Mock Get-NetFirewallProfile -MockWith { $Firewall }
-      It "LogBlocked shouldn't match so should return false" {
+    Context -Name 'Testing Test-TargetResource operater logic for absent' -Fixture {
+      It -name "LogBlocked shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "LogAllowed shouldn't match so should return false" {
+      It -name "LogAllowed shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked True -LogAllowed True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "LogIgnored shouldn't match so should return false" {
+      It -name "LogIgnored shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored False -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "LogMaxSizeKilobytes shouldn't match so should return false" {
+      It -name "LogMaxSizeKilobytes shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 1024 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "DefaultInboundAction shouldn't match so should return false" {
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Allow -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "DefaultInboundAction shouldn't match so should return false" {
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Block | Should Be 'False'
       }
     }
   }
-  Describe "Enabling Firewall with Set-TargetResource" {
-
-    It "Enabling firewall and configuring with values" {
+  Describe -Name 'Enabling Firewall with Set-TargetResource' -Fixture {
+    It -name 'Enabling firewall and configuring with values' -test {
       Set-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
-    Context "Testing ensure/absent logic for Test-TargetResource on a enabled firewall zone" {
-      $Firewall.Enabled = $true
-      Mock Get-NetFirewallProfile -MockWith { $Firewall }
-      It "Testing Test-TargetResource present logic should return true" {
+    Context -Name 'Testing ensure/absent logic for Test-TargetResource on a enabled firewall zone' -Fixture {
+      It -name 'Testing Test-TargetResource present logic should return true' -test {
         Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'true'
       }
-      It "Testing Test-TargetResource absent logic should return false" {
+      It -name 'Testing Test-TargetResource absent logic should return false' -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'false'
       }
     }
-    Context "Testing Test-TargetResource operater logic for present" {
-      $Firewall.Enabled = $true
-      Mock Get-NetFirewallProfile -MockWith { $Firewall }
-      It "LogBlocked shouldn't match so should return false" {
+    Context -Name 'Testing Test-TargetResource operater logic for present' -Fixture {
+      It -name "LogBlocked shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "LogAllowed shouldn't match so should return false" {
+      It -name "LogAllowed shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogBlocked True -LogAllowed True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "LogIgnored shouldn't match so should return false" {
+      It -name "LogIgnored shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored False -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "LogMaxSizeKilobytes shouldn't match so should return false" {
+      It -name "LogMaxSizeKilobytes shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 1024 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "DefaultInboundAction shouldn't match so should return false" {
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Allow -DefaultOutboundAction Allow | Should Be 'False'
       }
-      It "DefaultInboundAction shouldn't match so should return false" {
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Block | Should Be 'False'
+      }
+    }
+  }
+  Describe -Name 'Setting firewall back to defaults with Set-TargetResource' -Fixture {
+    It -name 'Enabling firewall with default values' -test {
+      Set-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured
+    }
+    Context -Name 'Testing ensure/absent logic for Test-TargetResource on a enabled firewall zone' -Fixture {
+      It -name 'Testing Test-TargetResource present logic should return true' -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured | Should Be 'true'
+      }
+      It -name 'Testing Test-TargetResource absent logic should return false' -test {
+        Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured | Should Be 'false'
+      }
+    }
+    Context -Name 'Testing Test-TargetResource operater logic for present' -Fixture {
+      It -name "LogBlocked shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "LogAllowed shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogBlocked True -LogAllowed True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "LogIgnored shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored False -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "LogMaxSizeKilobytes shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 1024 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
+        Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Allow -DefaultOutboundAction Allow | Should Be 'False'
+      }
+      It -name "DefaultInboundAction shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Block | Should Be 'False'
       }
     }
