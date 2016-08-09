@@ -1,7 +1,7 @@
 ﻿Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
 
-$Global:DSCModuleName      = 'xDSCFirewall' # Example xNetworking
-$Global:DSCResourceName    = 'xDSCFirewall' # Example MSFT_xFirewall
+$Global:DSCModuleName      = 'xDSCFirewall'
+$Global:DSCResourceName    = 'xDSCFirewall'
 
 InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
   $Firewall = New-Object -TypeName PSObject -Property @{
