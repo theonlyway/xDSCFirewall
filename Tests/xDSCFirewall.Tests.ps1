@@ -1,5 +1,8 @@
 ﻿Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
 
+$Global:DSCModuleName      = 'xDSCFirewall'
+$Global:DSCResourceName    = 'xDSCFirewall'
+
 InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
   $Firewall = New-Object -TypeName PSObject -Property @{
     Enabled               = $true
@@ -21,7 +24,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
     }
   }
 
-  Describe -Name 'Testing Get-TargetResource results' -Fixture {
+  Describe -Name "$($Global:DSCResourceName)\Get-TargetResource" -Fixture {
     $Firewall.Enabled = $false
     Mock -CommandName Get-NetFirewallProfile -MockWith {
       $Firewall
@@ -38,11 +41,11 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
       (Get-TargetResource -Zone Public -Ensure Present).Ensure | Should Be 'Present'
     }
   }
-  Describe -Name 'Disabling Firewall with Set-TargetResource' -Fixture {
+  Describe -Name "Disabling Firewall with $($Global:DSCResourceName)\Set-TargetResource" -Fixture {
     It -name 'Disabling firewall and configuring with values' -test {
       Set-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
-    Context -Name 'Testing ensure/absent logic for Test-TargetResource on a disabled firewall zone' -Fixture {
+    Context -Name "Testing ensure/absent logic for $($Global:DSCResourceName)\Test-TargetResource on a disabled firewall zone" -Fixture {
       It -name 'Testing Test-TargetResource present logic should return false' -test {
         Test-TargetResource -Zone Public -Ensure Present -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
@@ -50,7 +53,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'True'
       }
     }
-    Context -Name 'Testing Test-TargetResource operater logic for absent' -Fixture {
+    Context -Name "Testing $($Global:DSCResourceName)\Test-TargetResource operater logic for absent" -Fixture {
       It -name "LogBlocked shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
@@ -71,7 +74,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
       }
     }
   }
-  Describe -Name 'Enabling Firewall with Set-TargetResource' -Fixture {
+  Describe -Name "Enabling Firewall with $($Global:DSCResourceName)\Set-TargetResource" -Fixture {
     It -name 'Enabling firewall and configuring with values' -test {
       Set-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked True -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow
     }
@@ -83,7 +86,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
         Test-TargetResource -Zone Public -Ensure Absent -LogBlocked True -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'false'
       }
     }
-    Context -Name 'Testing Test-TargetResource operater logic for present' -Fixture {
+    Context -Name "Testing $($Global:DSCResourceName)\Test-TargetResource operater logic for present" -Fixture {
       It -name "LogBlocked shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
@@ -104,11 +107,11 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
       }
     }
   }
-  Describe -Name 'Setting firewall back to defaults with Set-TargetResource' -Fixture {
+  Describe -Name "Setting firewall back to defaults with $($Global:DSCResourceName)\Set-TargetResource" -Fixture {
     It -name 'Enabling firewall with default values' -test {
       Set-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured
     }
-    Context -Name 'Testing ensure/absent logic for Test-TargetResource on a enabled firewall zone' -Fixture {
+    Context -Name "Testing ensure/absent logic for $($Global:DSCResourceName)\Test-TargetResource on a enabled firewall zone" -Fixture {
       It -name 'Testing Test-TargetResource present logic should return true' -test {
         Test-TargetResource -Zone Public -Ensure Present -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured | Should Be 'true'
       }
@@ -116,7 +119,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
         Test-TargetResource -Zone Public -Ensure Absent -LogAllowed False -LogBlocked False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction NotConfigured -DefaultOutboundAction NotConfigured | Should Be 'false'
       }
     }
-    Context -Name 'Testing Test-TargetResource operater logic for present' -Fixture {
+    Context -Name "Testing $($Global:DSCResourceName)\Test-TargetResource operater logic for present" -Fixture {
       It -name "LogBlocked shouldn't match so should return false" -test {
         Test-TargetResource -Zone Public -Ensure Present -LogBlocked False -LogAllowed False -LogIgnored NotConfigured -LogMaxSizeKilobytes 4096 -DefaultInboundAction Block -DefaultOutboundAction Allow | Should Be 'False'
       }
