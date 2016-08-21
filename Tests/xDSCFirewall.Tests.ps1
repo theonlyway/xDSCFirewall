@@ -1,4 +1,5 @@
-﻿Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
+﻿#requires -Version 1.0
+Import-Module -Name .\DSCResources\xDSCFirewall\xDSCFirewall.psm1
 
 $Global:DSCModuleName      = 'xDSCFirewall'
 $Global:DSCResourceName    = 'xDSCFirewall'
@@ -29,7 +30,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
     Mock -CommandName Get-NetFirewallProfile -MockWith {
       $Firewall
     }
-    It -name 'Firewall disabled while Test-TargetResource should return absent in hash table' -test {
+    It -name 'Firewall disabled Get-TargetResource should return absent in hash table' -test {
       (Get-TargetResource -Zone Public -Ensure Present).Ensure | Should Be 'Absent'
     }
 
@@ -37,7 +38,7 @@ InModuleScope -ModuleName XDSCFirewall -ScriptBlock {
     Mock -CommandName Get-NetFirewallProfile -MockWith {
       $Firewall
     }
-    It -name 'Firewall enabled while Test-TargetResource should return present in hash table' -test {
+    It -name 'Firewall enabled Get-TargetResource should return present in hash table' -test {
       (Get-TargetResource -Zone Public -Ensure Present).Ensure | Should Be 'Present'
     }
   }
