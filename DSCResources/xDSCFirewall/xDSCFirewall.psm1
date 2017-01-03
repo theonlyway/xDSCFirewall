@@ -75,24 +75,34 @@ function Set-TargetResource
     [System.String]$DefaultOutboundAction = 'NotConfigured'
   )
 
-  $Output = @(
-    "Enabled firewall zone $Zone and configured the following
-      DefaultInboundAction: $DefaultInboundAction
-      DefaultOutboundAction: $DefaultOutboundAction
-      LogAllowed: $LogAllowed
-      LogBlocked: $LogBlocked
-      LogIgnored: $LogIgnored
-      LogMaxSizeKilobytes: $LogMaxSizeKilobytes
-  ")
-
   if ($Ensure -eq 'Present')
   {
+    $Output = @(
+      "Enabled firewall zone $Zone and configured the following
+        DefaultInboundAction: $DefaultInboundAction
+        DefaultOutboundAction: $DefaultOutboundAction
+        LogAllowed: $LogAllowed
+        LogBlocked: $LogBlocked
+        LogIgnored: $LogIgnored
+        LogMaxSizeKilobytes: $LogMaxSizeKilobytes
+    ")
+    
     Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled True -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -Source 'xDSCFirewall' -ErrorAction SilentlyContinue
     Write-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -Source 'xDSCFirewall' -EventId 3001 -EntryType Information -Message ($Output | Out-String)
   }
   elseif ($Ensure -eq 'Absent')
   {
+    $Output = @(
+      "Disabled firewall zone $Zone and configured the following
+        DefaultInboundAction: $DefaultInboundAction
+        DefaultOutboundAction: $DefaultOutboundAction
+        LogAllowed: $LogAllowed
+        LogBlocked: $LogBlocked
+        LogIgnored: $LogIgnored
+        LogMaxSizeKilobytes: $LogMaxSizeKilobytes
+    ")
+    
     Get-NetFirewallProfile $Zone | Set-NetFirewallProfile -Enabled False -LogAllowed $LogAllowed -LogBlocked $LogBlocked -LogIgnored $LogIgnored -LogMaxSizeKilobytes $LogMaxSizeKilobytes -DefaultInboundAction $DefaultInboundAction -DefaultOutboundAction $DefaultOutboundAction
     New-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -Source 'xDSCFirewall' -ErrorAction SilentlyContinue
     Write-EventLog -LogName 'Microsoft-Windows-DSC/Operational' -Source 'xDSCFirewall' -EventId 3001 -EntryType Information -Message ($Output | Out-String)
