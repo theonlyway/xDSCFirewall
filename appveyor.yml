@@ -49,7 +49,7 @@ deploy_script:
         Write-Verbose -Message 'Creating project artifact' -Verbose
         $stagingDirectory = (Resolve-Path -Path ..).Path
         $manifest = Join-Path -Path $pwd -ChildPath '*.psd1' -Resolve
-        (Get-Content $manifest -Raw).Replace('1.6', $env:APPVEYOR_BUILD_VERSION) | Out-File $manifest
+        Update-ModuleManifest -path $manifest -ModuleVersion $env:APPVEYOR_BUILD_VERSION
         $zipFilePath = Join-Path -Path $stagingDirectory -ChildPath "$env:APPVEYOR_PROJECT_NAME-$env:APPVEYOR_BUILD_VERSION.zip"
         Add-Type -AssemblyName System.IO.Compression.FileSystem
         [System.IO.Compression.ZipFile]::CreateFromDirectory($pwd, $zipFilePath)
