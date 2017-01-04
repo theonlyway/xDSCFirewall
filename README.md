@@ -106,6 +106,9 @@ The default setting when managing a computer is False. When managing a GPO, the 
 
 # Versions
 
+## 1.6.21
+Changed the event log entry when a zone is either disabled or enabled to give it some distinction between the two events.
+
 ## 1.6
 Merged in requested changes from heoelri adding the following non-mandatory parameters
 
